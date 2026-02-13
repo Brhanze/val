@@ -2,35 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Will You Be My Valentine?</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Mira — Will You Be My Valentine?</title>
 
   <style>
     :root{
-      --card:rgba(255,255,255,.92);
-      --text:#1f1f1f;
+      --card: rgba(255,255,255,.92);
+      --text: #1f1f1f;
       --shadow: 0 18px 50px rgba(0,0,0,.18);
-      --yes:#2ecc71;
-      --no:#2d7dff;
+      --yes: #2ecc71;
+      --no: #2d7dff;
+      --pink: #ff4d7a;
+      --red: #ff2d55;
     }
 
     *{ box-sizing:border-box; }
     html, body{ height:100%; }
     body{
       margin:0;
-      min-height:100svh; /* better on mobile */
+      min-height:100svh;
       display:grid;
       place-items:center;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: radial-gradient(circle at top, #ffd1dc, #ff6b81 55%, #ff2d55);
       overflow:hidden;
       color:var(--text);
+      padding: env(safe-area-inset-top) 12px env(safe-area-inset-bottom);
       -webkit-tap-highlight-color: transparent;
     }
 
     /* background */
     .bg{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
-
     .glow-blob{
       position:absolute; width:46vmin; height:46vmin; border-radius:50%;
       filter:blur(22px); opacity:.35;
@@ -48,39 +50,6 @@
       opacity:.55;
     }
 
-    /* balloons */
-    .balloon{
-      position:absolute; bottom:-18vh; width:56px; height:72px;
-      transform:translateX(-50%); opacity:.9; animation: rise linear infinite;
-      filter: drop-shadow(0 14px 18px rgba(0,0,0,.16));
-    }
-    .balloon .heart{
-      position:absolute; left:50%; top:0; width:56px; height:56px;
-      transform:translateX(-50%) rotate(45deg);
-      border-radius:10px;
-      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0)),
-                  linear-gradient(135deg,#ff2d55,#ff7aa2);
-    }
-    .balloon .heart:before, .balloon .heart:after{
-      content:""; position:absolute; width:56px; height:56px; border-radius:50%;
-      background: linear-gradient(135deg,#ff2d55,#ff7aa2); top:-28px; left:0;
-    }
-    .balloon .heart:after{ left:-28px; top:0; }
-    .balloon .string{
-      position:absolute; left:50%; top:58px; width:2px; height:80px;
-      transform:translateX(-50%); background:rgba(255,255,255,.65);
-      border-radius:2px; opacity:.7;
-    }
-    .balloon .knot{
-      position:absolute; left:50%; top:56px; width:10px; height:10px;
-      transform:translateX(-50%) rotate(45deg);
-      background: rgba(255,255,255,.8); border-radius:2px; opacity:.7;
-    }
-    @keyframes rise{
-      from{ transform: translateX(-50%) translateY(0) rotate(-2deg);}
-      to{ transform: translateX(-50%) translateY(-135vh) rotate(2deg);}
-    }
-
     /* petals */
     .petal{
       position:absolute; top:-10vh; width:14px; height:18px; border-radius:12px;
@@ -96,20 +65,20 @@
       to{ transform: translateY(120vh) translateX(14vw) rotate(240deg);}
     }
 
-    /* candles - responsive */
+    /* candles */
     .candles{
       position:absolute; left:50%; bottom:0; transform:translateX(-50%);
       width:min(1400px,100vw);
-      height: clamp(140px, 18vh, 210px);
+      height: clamp(120px, 18vh, 210px);
       display:flex; justify-content:center; gap: clamp(8px, 1.3vw, 14px);
       padding: 0 10px 10px;
       opacity:.98;
-      flex-wrap: nowrap;
+      pointer-events:none;
     }
     .candle{
       position:relative;
-      width: clamp(22px, 2.6vw, 34px);
-      height: clamp(82px, 10vh, 120px);
+      width: clamp(18px, 3.2vw, 34px);
+      height: clamp(70px, 10vh, 120px);
       border-radius:12px;
       background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.7));
       box-shadow:0 18px 40px rgba(0,0,0,.16);
@@ -122,8 +91,8 @@
     .wick{ position:absolute; top:-10px; left:50%; width:3px; height:14px; transform:translateX(-50%); background:rgba(0,0,0,.6); border-radius:2px; }
     .flame{
       position:absolute; top:-44px; left:50%;
-      width: clamp(12px, 1.8vw, 16px);
-      height: clamp(22px, 3.2vw, 30px);
+      width: clamp(12px, 2.4vw, 16px);
+      height: clamp(22px, 4vw, 30px);
       transform:translateX(-50%); border-radius:50%;
       background:
         radial-gradient(circle at 40% 30%, rgba(255,255,255,.95), rgba(255,255,255,0) 45%),
@@ -134,45 +103,59 @@
     }
     .flame-glow{
       position:absolute; top:-56px; left:50%;
-      width: clamp(60px, 7vw, 84px);
-      height: clamp(60px, 7vw, 84px);
+      width: clamp(58px, 10vw, 84px);
+      height: clamp(58px, 10vw, 84px);
       transform:translateX(-50%);
       background: radial-gradient(circle, rgba(255,200,90,.35), rgba(255,200,90,0) 70%);
       filter: blur(2px); opacity:.9; animation: glowPulse 1.4s ease-in-out infinite;
     }
-    @keyframes flicker{ from{ transform: translateX(-50%) rotate(-5deg) scale(1); opacity:.95 } to{ transform: translateX(-50%) rotate(7deg) scale(1.07); opacity:1 } }
-    @keyframes glowPulse{ 0%,100%{ transform:translateX(-50%) scale(1); opacity:.75 } 50%{ transform:translateX(-50%) scale(1.1); opacity:.95 } }
+    @keyframes flicker{
+      from{ transform: translateX(-50%) rotate(-5deg) scale(1); opacity:.95 }
+      to{ transform: translateX(-50%) rotate(7deg) scale(1.07); opacity:1 }
+    }
+    @keyframes glowPulse{
+      0%,100%{ transform:translateX(-50%) scale(1); opacity:.75 }
+      50%{ transform:translateX(-50%) scale(1.1); opacity:.95 }
+    }
 
-    /* card (responsive) */
+    /* card */
     .card{
-      width:min(760px, 92vw);
-      background:var(--card);
-      border-radius:28px;
-      padding: clamp(22px, 4vw, 34px) clamp(16px, 3.5vw, 24px);
+      width:min(980px, 94vw);
+      min-height: clamp(320px, 52vh, 580px);
+      background:rgba(255,255,255,.92);
+      border-radius:34px;
+      padding: clamp(22px, 4vw, 44px) clamp(16px, 4vw, 40px);
       text-align:center;
       box-shadow:var(--shadow);
       position:relative;
       z-index:2;
       backdrop-filter: blur(8px);
       border:1px solid rgba(255,255,255,.35);
+      overflow:hidden;
     }
     .card::before{
-      content:""; position:absolute; inset:-40%;
+      content:"";
+      position:absolute;
+      inset:-40%;
+      z-index:0;
+      pointer-events:none;
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,0) 40%),
         radial-gradient(circle at 70% 40%, rgba(255,255,255,.25), rgba(255,255,255,0) 38%),
         radial-gradient(circle at 40% 75%, rgba(255,255,255,.18), rgba(255,255,255,0) 45%);
       animation: shimmer 8s ease-in-out infinite alternate;
-      pointer-events:none;
     }
-    @keyframes shimmer{ from{transform:translate(-2%,-2%) rotate(0deg); opacity:.65} to{transform:translate(2%,1%) rotate(8deg); opacity:.85} }
+    @keyframes shimmer{
+      from{transform:translate(-2%,-2%) rotate(0deg); opacity:.65}
+      to{transform:translate(2%,1%) rotate(8deg); opacity:.85}
+    }
+    .card > *{ position:relative; z-index:2; }
 
     h1{
       margin:0;
-      font-size: clamp(22px, 5vw, 44px);
+      font-size: clamp(22px, 5.5vw, 52px);
       letter-spacing:.2px;
-      position:relative;
-      z-index:2;
+      line-height:1.15;
     }
     .name{
       display:inline-block;
@@ -180,56 +163,75 @@
       -webkit-background-clip:text; background-clip:text; color:transparent;
       animation: titleGlow 1.8s ease-in-out infinite alternate;
     }
-    @keyframes titleGlow{ from{ filter: drop-shadow(0 0 0px rgba(255,45,85,.35)); } to{ filter: drop-shadow(0 0 16px rgba(255,45,85,.6)); } }
+    @keyframes titleGlow{
+      from{ filter: drop-shadow(0 0 0px rgba(255,45,85,.35)); }
+      to{ filter: drop-shadow(0 0 16px rgba(255,45,85,.6)); }
+    }
 
-    .btns{
+    /* play area */
+    .playArea{
+      margin: 18px auto 0;
+      width: min(760px, 92vw);
+      min-height: clamp(140px, 22vh, 190px);
+      position:relative;
       display:flex;
       justify-content:center;
+      align-items:flex-start;
       gap:12px;
-      margin-top:16px;
-      flex-wrap:wrap;
-      position:relative;
-      z-index:2;
+      padding: 10px;
     }
+
     button{
       border:0;
-      padding: 12px 18px;
+      padding: 14px 18px;
       border-radius:999px;
       font-size:16px;
       cursor:pointer;
-      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-      box-shadow: 0 12px 22px rgba(0,0,0,.16);
       user-select:none;
       min-width: 140px;
       touch-action: manipulation;
+      box-shadow: 0 12px 22px rgba(0,0,0,.16);
+      -webkit-user-select:none;
     }
     button:active{ transform: scale(.98); }
-    #yesBtn{ background:var(--yes); color:white; }
-    #yesBtn:hover{ filter: brightness(1.06); transform: translateY(-1px); }
 
-    /* ✅ NO button: always visible, exact left/top coordinates */
+    #yesBtn{
+      background:var(--yes);
+      color:white;
+      position:relative;
+      z-index:3;
+    }
     #noBtn{
       background:var(--no);
       color:white;
-      position:fixed;
-      left: 20px;
-      top: 70%;
-      transform:none;              /* IMPORTANT */
-      will-change:left,top;
-      z-index:10005;
-      box-shadow: 0 18px 40px rgba(0,0,0,.28);
+      position:absolute;
+      left: 58%;
+      top: 18px;
+      z-index:4;
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      transition: left .28s cubic-bezier(.2,.9,.2,1),
+                  top  .28s cubic-bezier(.2,.9,.2,1);
     }
-    #noBtn:hover{ filter: brightness(1.06); }
+
+    .say{
+      margin-top:12px;
+      min-height: 24px;
+      font-weight:700;
+      letter-spacing:.2px;
+      color: rgba(0,0,0,.65);
+      transition: opacity .25s ease;
+      font-size: clamp(14px, 3.8vw, 16px);
+    }
 
     .popup{
-      position:fixed; left:50%; top:18px;
+      position:fixed; left:50%; top: max(14px, env(safe-area-inset-top));
       transform: translateX(-50%) translateY(-8px);
       background: rgba(0,0,0,.82);
       color:#fff;
       padding:12px 14px;
       border-radius:16px;
       font-size:15px;
-      max-width:min(720px,92vw);
+      max-width:min(760px,92vw);
       box-shadow:0 14px 30px rgba(0,0,0,.2);
       opacity:0;
       pointer-events:none;
@@ -238,85 +240,223 @@
     }
     .popup.show{ opacity:1; transform: translateX(-50%) translateY(0px); }
 
-    .say{
-      margin-top:10px;
-      min-height:22px;
-      font-weight:700;
-      letter-spacing:.2px;
-      color: rgba(0,0,0,.65);
-      position:relative;
-      z-index:2;
-      transition: opacity .25s ease;
-    }
-
-    /* overlay */
+    /* YES overlay */
     .overlay{
       position:fixed; inset:0;
       display:none;
       align-items:center;
       justify-content:center;
-      text-align:center;
-      padding:24px;
+      padding: 18px;
       background: radial-gradient(circle at top, #ff9ab5, #ff2d55 60%, #b1002f);
       z-index:9998;
       color:white;
       overflow:hidden;
     }
-    .overlay::before{
-      content:""; position:absolute; inset:-30%;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), rgba(255,255,255,0) 38%),
-        radial-gradient(circle at 70% 40%, rgba(255,255,255,.18), rgba(255,255,255,0) 40%),
-        radial-gradient(circle at 45% 80%, rgba(255,255,255,.14), rgba(255,255,255,0) 46%);
-      animation: overlayGlow 7s ease-in-out infinite alternate;
-      pointer-events:none;
-    }
-    @keyframes overlayGlow{ from{ transform: translate(-1%,-1%) rotate(0deg); opacity:.65 } to{ transform: translate(2%,1%) rotate(10deg); opacity:.9 } }
-
     .overlay .box{
-      position:relative;
-      width:min(760px,94vw);
+      width:min(920px,94vw);
       background: rgba(255,255,255,.14);
       border:1px solid rgba(255,255,255,.25);
       border-radius:28px;
-      padding: clamp(22px, 4vw, 34px) 22px 28px;
+      padding: clamp(16px, 4vw, 28px);
       box-shadow:0 24px 70px rgba(0,0,0,.28);
       backdrop-filter: blur(10px);
-      transform: translateY(10px);
       animation: popIn .45s ease-out forwards;
+      text-align:center;
+      position:relative;
     }
-    @keyframes popIn{ to{ transform: translateY(0); } }
+    @keyframes popIn{ from{ transform: translateY(10px); } to{ transform: translateY(0); } }
+    .overlay h2{ margin:0 0 8px; font-size: clamp(20px,5.5vw,40px); }
+    .overlay p{ margin:0 0 10px; font-size:15px; line-height:1.55; opacity:.95; }
+    .countdown{ margin-top:12px; font-weight:900; letter-spacing:.3px; font-size:18px; }
 
-    .overlay h2{
-      margin:0 0 10px;
-      font-size: clamp(22px,4.5vw,40px);
-      text-shadow: 0 16px 30px rgba(0,0,0,.25);
-    }
-    .overlay .bigheart{
-      font-size:34px;
-      display:inline-block;
-      animation: heartBeat 1s ease-in-out infinite;
-      filter: drop-shadow(0 18px 18px rgba(0,0,0,.2));
-      margin-bottom:10px;
-    }
-    @keyframes heartBeat{ 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.12); } }
-    .overlay p{ margin:0; color: rgba(255,255,255,.96); font-size:16px; line-height:1.55; text-shadow: 0 10px 18px rgba(0,0,0,.18); }
-    .countdown{ margin-top:16px; font-weight:800; letter-spacing:.3px; font-size:18px; text-shadow: 0 12px 20px rgba(0,0,0,.22); }
-
-    .mini{
-      position:absolute;
-      left: var(--x);
-      top: 110%;
-      font-size: var(--s);
-      opacity:.85;
-      animation: miniUp linear forwards;
-      filter: drop-shadow(0 10px 12px rgba(0,0,0,.18));
+    /* ===== Heart-shaped balloon bouquet ===== */
+    .bouquetStage{
+      position:relative;
+      width: min(720px, 92vw);
+      height: clamp(260px, 44vh, 460px);
+      margin: 12px auto 0;
+      display:grid;
+      place-items:center;
+      overflow: visible;
       pointer-events:none;
     }
-    @keyframes miniUp{
-      from{ transform: translateY(0) rotate(0deg); opacity:0 }
-      10%{ opacity:.9 }
-      to{ transform: translateY(-140vh) rotate(220deg); opacity:0 }
+
+    /* swing the whole bouquet gently */
+    .bouquet{
+      position:absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(520px, 86vw);
+      height: 100%;
+      transform-origin: 50% 0%;
+      animation: swing 2.8s ease-in-out infinite alternate;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.18));
+    }
+    @keyframes swing{
+      from{ transform: translateX(-50%) rotate(-4deg); }
+      to{ transform: translateX(-50%) rotate(4deg); }
+    }
+
+    /* heart layout */
+    .balloonsHeart{
+      position:absolute;
+      left:50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 72%;
+    }
+
+    /* balloon base */
+    .balloonHeart{
+      position:absolute;
+      width: clamp(78px, 13vw, 110px);
+      height: clamp(92px, 15vw, 130px);
+    }
+
+    /* colors */
+    .pink .bBody{ background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0)),
+                           linear-gradient(135deg, #ff6aa2, #ff2d55); }
+    .red  .bBody{ background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0)),
+                           linear-gradient(135deg, #ff2d55, #c4002d); }
+
+    /* heart-shaped balloon using 2 circles + rotated square */
+    .bBody{
+      position:absolute;
+      left:50%; top:0;
+      width: 100%;
+      height: 78%;
+      transform: translateX(-50%);
+      filter: saturate(1.05);
+    }
+    .bBody .sq{
+      position:absolute;
+      left:50%; top: 22%;
+      width: 60%;
+      height: 60%;
+      transform: translateX(-50%) rotate(45deg);
+      border-radius: 14px;
+      background: inherit;
+      box-shadow: inset 0 10px 18px rgba(255,255,255,.18);
+    }
+    .bBody .c1, .bBody .c2{
+      position:absolute;
+      width: 60%;
+      height: 60%;
+      border-radius:50%;
+      background: inherit;
+      top: 0;
+    }
+    .bBody .c1{ left: 12%; }
+    .bBody .c2{ right: 12%; }
+
+    .knot{
+      position:absolute;
+      left:50%;
+      top: 76%;
+      width: 12px;
+      height: 12px;
+      transform: translateX(-50%) rotate(45deg);
+      background: rgba(255,255,255,.85);
+      border-radius: 3px;
+      opacity:.8;
+    }
+
+    /* rope strings */
+    .string{
+      position:absolute;
+      left:50%;
+      top: 82%;
+      width: 2px;
+      height: 120px;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.78);
+      border-radius: 2px;
+      opacity:.85;
+    }
+
+    /* tie all strings to one bow/rope point */
+    .ropeTie{
+      position:absolute;
+      left:50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background: rgba(255,255,255,.9);
+      border-radius: 4px;
+      transform-origin:center;
+      rotate: 12deg;
+    }
+    .ropeBow{
+      position:absolute;
+      left:50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 26px;
+      opacity:.95;
+    }
+    .ropeBow:before, .ropeBow:after{
+      content:"";
+      position:absolute;
+      top: 6px;
+      width: 28px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.92);
+      border-radius: 999px;
+      transform: rotate(-12deg);
+    }
+    .ropeBow:after{
+      right: 0;
+      transform: rotate(12deg);
+    }
+    .ropeBow:before{ left: 0; }
+
+    /* Position 8 balloons in a heart shape */
+    /* top lobes */
+    .p1{ left: 38%; top: 2%; }
+    .p2{ left: 62%; top: 2%; }
+    /* upper mid */
+    .p3{ left: 26%; top: 18%; }
+    .p4{ left: 74%; top: 18%; }
+    /* mid */
+    .p5{ left: 18%; top: 38%; }
+    .p6{ left: 82%; top: 38%; }
+    /* lower mid */
+    .p7{ left: 34%; top: 50%; }
+    .p8{ left: 66%; top: 50%; }
+    /* point (use rope tie location instead of balloon) */
+
+    /* love sparkle text */
+    .loveFloat{
+      position:absolute;
+      left:50%;
+      top: 68%;
+      transform: translateX(-50%);
+      font-weight: 900;
+      letter-spacing:.3px;
+      font-size: clamp(18px, 5vw, 34px);
+      text-shadow: 0 10px 28px rgba(0,0,0,.28);
+      animation: lovePulse 1.2s ease-in-out infinite alternate;
+      white-space:nowrap;
+      opacity:.95;
+    }
+    @keyframes lovePulse{
+      from{ transform: translateX(-50%) scale(1); filter: drop-shadow(0 0 0 rgba(255,255,255,.1)); }
+      to{ transform: translateX(-50%) scale(1.06); filter: drop-shadow(0 0 14px rgba(255,255,255,.22)); }
+    }
+
+    /* responsive */
+    @media (max-width: 480px){
+      button{ min-width: 132px; font-size: 15px; padding: 13px 16px; }
+      #noBtn{ left: 54%; top: 14px; }
+      .playArea{ min-height: 170px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -326,42 +466,89 @@
     <div class="glow-blob b1"></div>
     <div class="glow-blob b2"></div>
     <div class="glow-blob b3"></div>
-
     <div class="candles" id="candles" aria-hidden="true"></div>
-
     <div class="vignette"></div>
   </div>
 
   <div class="card" role="main">
-    <h1>💖 <span class="name">Tsedia</span>, will you be my Valentine? 💖</h1>
+    <h1>💖 <span class="name">Mira</span>, will you be my Valentine? 💖</h1>
 
-    <div class="btns">
+    <div class="playArea" id="playArea">
       <button id="yesBtn" aria-label="Yes">Yes 💘</button>
       <button id="noBtn" aria-label="No">No 🙈</button>
     </div>
 
-    <div id="say" class="say">✨ Hover “No” if you dare 😄</div>
+    <div id="say" class="say">🕯️ Candles are lit… now I’m waiting for your YES 😊</div>
   </div>
 
   <div id="popup" class="popup" role="status" aria-live="polite"></div>
 
   <div id="overlay" class="overlay" aria-live="polite">
     <div class="box" role="dialog" aria-modal="true">
-      <div class="bigheart">💞</div>
-      <h2>Happy Valentine’s Day — will you be mine forever?</h2>
-      <p id="overlayText">Tsedia, my promise to you: choose, respect, and cherish you every day. Let’s make every day special. 💍🌹</p>
+      <h2>Happy Valentine’s Day, Mira! 💝</h2>
+      <p>Look! A heart of balloons just for you 🎈💗🎈</p>
+
+      <!-- ✅ Heart-shaped bouquet (4 pink + 4 red), tied with rope, swinging -->
+      <div class="bouquetStage" aria-hidden="true">
+        <div class="bouquet" id="bouquet">
+          <div class="balloonsHeart">
+            <!-- 4 pink -->
+            <div class="balloonHeart pink p1">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart pink p4">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart pink p5">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart pink p8">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+
+            <!-- 4 red -->
+            <div class="balloonHeart red p2">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart red p3">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart red p6">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+            <div class="balloonHeart red p7">
+              <div class="bBody"><div class="c1"></div><div class="c2"></div><div class="sq"></div></div>
+              <div class="knot"></div><div class="string"></div>
+            </div>
+          </div>
+
+          <div class="loveFloat">LOVE 💞 LOVE 💞 LOVE</div>
+
+          <!-- tie point + bow -->
+          <div class="ropeTie"></div>
+          <div class="ropeBow"></div>
+        </div>
+      </div>
+
       <div id="countdown" class="countdown">Redirecting in 3…</div>
     </div>
   </div>
 
   <script>
-    const YES_REDIRECT_URL = "https://www.youtube.com/shorts/osYlgzU79hg?themeRefresh=1";
-    const HER_NAME = "Tsedia";
+    const YT_SHORTS_URL = "https://www.youtube.com/shorts/G18Y-b5ge1Q";
+    const HER_NAME = "Mira";
 
     const sayLines = [
+      "🕯️ Candles are lit… now I’m waiting for your YES 😊",
       "✨ If you click YES… my whole world becomes brighter ❤️",
       "🌙 Tonight, my only wish is you 💖",
-      "🕯️ Candles are lit… now I’m waiting for your YES 😌",
       "💞 One click can start our love story forever…",
       `🌹 My heart is already yours, ${HER_NAME} ❤️`
     ];
@@ -388,15 +575,16 @@
 
     const yesBtn = document.getElementById("yesBtn");
     const noBtn  = document.getElementById("noBtn");
+    const playArea = document.getElementById("playArea");
 
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
     const rand = (arr) => arr[Math.floor(Math.random()*arr.length)];
+    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
     function showPopup(msg){
       popup.textContent = msg;
       popup.classList.add("show");
       clearTimeout(showPopup._t);
-      showPopup._t = setTimeout(() => popup.classList.remove("show"), 1500);
+      showPopup._t = setTimeout(() => popup.classList.remove("show"), 1400);
     }
 
     // rotate "say"
@@ -407,18 +595,18 @@
         sayEl.textContent = sayLines[sayIdx % sayLines.length];
         sayEl.style.opacity = 1;
         sayIdx++;
-      }, 260);
+      }, 220);
     }
-    setInterval(rotateSay, 3000);
+    setInterval(rotateSay, 2800);
     rotateSay();
 
-    // candles (a lot)
+    // candles
     function buildCandles(){
       const count = 18;
       candlesEl.innerHTML = "";
       for(let i=0;i<count;i++){
-        const h = 88 + Math.random()*70;
-        const w = 22 + Math.random()*18;
+        const h = 80 + Math.random()*70;
+        const w = 18 + Math.random()*18;
         const flick = (0.08 + Math.random()*0.12).toFixed(2);
 
         const c = document.createElement("div");
@@ -437,29 +625,7 @@
     }
     buildCandles();
 
-    // balloons + petals
-    function spawnBalloon(){
-      const b = document.createElement("div");
-      b.className = "balloon";
-      b.style.left = (Math.random()*100) + "vw";
-      const scale = 0.75 + Math.random()*0.7;
-      const dur = 12 + Math.random()*16;
-      const wobble = (Math.random()*6 - 3).toFixed(2);
-      b.style.animationDuration = dur + "s";
-      b.style.transform = `translateX(-50%) rotate(${wobble}deg) scale(${scale})`;
-      const hue = 345 + Math.random()*18;
-      b.innerHTML = `
-        <div class="heart" style="background:
-          linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0)),
-          linear-gradient(135deg, hsl(${hue} 95% 58%), hsl(${hue+12} 95% 72%));"></div>
-        <div class="knot"></div><div class="string"></div>
-      `;
-      bg.appendChild(b);
-      setTimeout(()=>b.remove(), (dur+2)*1000);
-    }
-    for(let i=0;i<7;i++) setTimeout(spawnBalloon, i*650);
-    setInterval(spawnBalloon, 1300);
-
+    // petals
     function spawnPetal(){
       const p = document.createElement("div");
       p.className = "petal";
@@ -476,73 +642,37 @@
     for(let i=0;i<12;i++) setTimeout(spawnPetal, i*300);
     setInterval(spawnPetal, 420);
 
-    // ✅ NO button: random anywhere, ALWAYS visible
-    function moveNoAnywhere(){
+    // NO button moves only inside playArea
+    function moveNoInsideBox(){
       showPopup(rand(romanticPopups));
       rotateSay();
 
-      const pad = 12;
+      const pad = 8;
 
-      // measure after it is rendered
-      const btnW = noBtn.offsetWidth || 140;
-      const btnH = noBtn.offsetHeight || 44;
+      const areaRect = playArea.getBoundingClientRect();
+      const btnW = noBtn.offsetWidth || 150;
+      const btnH = noBtn.offsetHeight || 48;
 
-      // max top-left coordinates so it stays fully in view
-      const maxLeft = Math.max(pad, window.innerWidth  - btnW - pad);
-      const maxTop  = Math.max(pad, window.innerHeight - btnH - pad);
+      const maxLeft = Math.max(pad, areaRect.width - btnW - pad);
+      const maxTop  = Math.max(pad, areaRect.height - btnH - pad);
 
-      // choose random and clamp
-      const left = clamp(
-        Math.floor(pad + Math.random() * (maxLeft - pad + 1)),
-        pad, maxLeft
-      );
-      const top  = clamp(
-        Math.floor(pad + Math.random() * (maxTop - pad + 1)),
-        pad, maxTop
-      );
+      const left = clamp(pad + Math.random() * (maxLeft - pad), pad, maxLeft);
+      const top  = clamp(pad + Math.random() * (maxTop - pad), pad, maxTop);
 
-      noBtn.style.transition = "left 0.14s ease, top 0.14s ease";
       noBtn.style.left = left + "px";
       noBtn.style.top  = top  + "px";
     }
 
-    // Start NO in a visible random place (after layout)
-    window.addEventListener("load", () => setTimeout(moveNoAnywhere, 120));
+    window.addEventListener("load", ()=> setTimeout(moveNoInsideBox, 150));
+    window.addEventListener("resize", ()=> setTimeout(moveNoInsideBox, 120));
 
-    // React to hover/click/touch
-    noBtn.addEventListener("mouseenter", moveNoAnywhere);
-    noBtn.addEventListener("click", (e)=>{ e.preventDefault(); moveNoAnywhere(); });
-    noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveNoAnywhere(); }, {passive:false});
+    noBtn.addEventListener("mouseenter", moveNoInsideBox);
+    noBtn.addEventListener("click", (e)=>{ e.preventDefault(); moveNoInsideBox(); });
+    noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveNoInsideBox(); }, {passive:false});
 
-    // Keep NO inside viewport on resize/orientation changes
-    window.addEventListener("resize", () => {
-      const r = noBtn.getBoundingClientRect();
-      if(r.right > window.innerWidth || r.bottom > window.innerHeight || r.left < 0 || r.top < 0){
-        moveNoAnywhere();
-      }
-    });
-
-    // overlay hearts
-    function spawnOverlayHearts(){
-      for(let i=0;i<26;i++){
-        setTimeout(()=>{
-          const h = document.createElement("div");
-          h.className = "mini";
-          h.textContent = Math.random() > 0.4 ? "❤️" : "💗";
-          h.style.setProperty("--x", (Math.random()*100) + "vw");
-          h.style.setProperty("--s", (14 + Math.random()*24) + "px");
-          const dur = 3.6 + Math.random()*2.6;
-          h.style.animationDuration = dur + "s";
-          overlay.appendChild(h);
-          setTimeout(()=>h.remove(), (dur*1000) + 600);
-        }, i*80);
-      }
-    }
-
-    // YES behavior
+    // YES: show bouquet animation then redirect 3-2-1
     yesBtn.addEventListener("click", ()=>{
       overlay.style.display = "flex";
-      spawnOverlayHearts();
 
       let sec = 3;
       countdownEl.textContent = `Redirecting in ${sec}…`;
@@ -551,7 +681,7 @@
         countdownEl.textContent = `Redirecting in ${sec}…`;
         if(sec <= 0){
           clearInterval(t);
-          window.location.href = YES_REDIRECT_URL;
+          window.location.href = YT_SHORTS_URL;
         }
       }, 900);
     });
